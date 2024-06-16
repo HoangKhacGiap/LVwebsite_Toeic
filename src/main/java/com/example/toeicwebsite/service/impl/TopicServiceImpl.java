@@ -1,19 +1,21 @@
 package com.example.toeicwebsite.service.impl;
 
-import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.TopicDTO;
+import com.example.toeicwebsite.data.entity.Structure;
 import com.example.toeicwebsite.data.entity.Topic;
 import com.example.toeicwebsite.data.repository.QuestionRepository;
+import com.example.toeicwebsite.data.repository.StructureRepository;
 import com.example.toeicwebsite.data.repository.TestRepository;
 import com.example.toeicwebsite.data.repository.TopicRepository;
+import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class TopicServiceImpl implements TopicService {
@@ -23,29 +25,36 @@ public class TopicServiceImpl implements TopicService {
     private TopicRepository topicRepository;
     @Autowired
     private TestRepository testRepository;
+    @Autowired
+    private StructureRepository structureRepository;
 
+    @Override
+    public List<TopicDTO> getTopicsByStructure(Long structureId) {
+        Optional<Structure> structure = Optional.ofNullable(structureRepository.findById(structureId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "structure không tồn tại"))));
 
-//    @Override
-//    public PaginationDTO filterTopic(String levelName, String partName, int numberOfTopic, int pageNumber, int pageSize) {
-//        Page<Topic> page = topicRepository.filterTopic(levelName, partName, numberOfTopic, PageRequest.of(pageNumber, pageSize));
-//        List<TopicDTO> list = new ArrayList<>();
-//
-//        for (Topic topic: page.getContent()) {
-//
-//            TopicDTO topicDTO = new TopicDTO();
-//
-//            topicDTO.setId(topic.getId());
-//            topicDTO.setAudioName(topic.getAudio_name());
-//            topicDTO.setImageName(topic.getImage_name());
-//            topicDTO.setPathAudio(topic.getAudio_path());
-//            topicDTO.setPathImage(topic.getImage_path());
-//            topicDTO.setLevelId(topic.getLevel().getId());
-//            topicDTO.setPartId(topic.getPart().getId());
-//
-//            list.add(topicDTO);
-//        }
-//        return new PaginationDTO(list, page.isFirst(), page.isLast(),
-//                page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
-//
-//    }
+        List<Topic> topics = topicRepository.findAllByLevelNameAndPartId
+                (structure.get().getPart().getId(), structure.get().getLevel_of_topic());
+        return topics.stream()
+                .limit(structure.get().getNumber_of_topic())
+                .map(this::topicConvertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private TopicDTO topicConvertToDTO(Topic topic) {
+        TopicDTO topicDTO = new TopicDTO();
+
+        topicDTO.setId(topic.getId());
+        topicDTO.setName(topic.getName());
+        topicDTO.setContent(topic.getContent());
+        topicDTO.setImageName(topic.getImage_name());
+        topicDTO.setAudioName(topic.getAudio_name());
+        topicDTO.setPathImage(topic.getImage_path());
+        topicDTO.setPathAudio(topic.getAudio_path());
+        topicDTO.setPartId(topic.getPart().getId());
+        topicDTO.setLevelId(topic.getLevel().getId());
+
+        return topicDTO;
+    }
+
 }
