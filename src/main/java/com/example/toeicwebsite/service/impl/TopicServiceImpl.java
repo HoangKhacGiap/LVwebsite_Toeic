@@ -8,6 +8,7 @@ import com.example.toeicwebsite.data.repository.StructureRepository;
 import com.example.toeicwebsite.data.repository.TestRepository;
 import com.example.toeicwebsite.data.repository.TopicRepository;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
+import com.example.toeicwebsite.service.QuestionService;
 import com.example.toeicwebsite.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,13 +21,11 @@ import java.util.stream.Collectors;
 @Service
 public class TopicServiceImpl implements TopicService {
     @Autowired
-    private QuestionRepository questionRepository;
-    @Autowired
     private TopicRepository topicRepository;
     @Autowired
-    private TestRepository testRepository;
-    @Autowired
     private StructureRepository structureRepository;
+    @Autowired
+    private QuestionService questionService;
 
     @Override
     public List<TopicDTO> getTopicsByStructure(Long structureId) {
@@ -53,6 +52,7 @@ public class TopicServiceImpl implements TopicService {
         topicDTO.setPathAudio(topic.getAudio_path());
         topicDTO.setPartId(topic.getPart().getId());
         topicDTO.setLevelId(topic.getLevel().getId());
+        topicDTO.setQuestions(questionService.getAllQuestionsWithAnswersByTopicId(topic.getId()));
 
         return topicDTO;
     }
