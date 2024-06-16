@@ -7,7 +7,7 @@ import lombok.*;
 @Data
 @Getter
 @Setter
-public class AnwserDTO {
+public class AnswerDTO {
     private Long id;
     private String content;
     private boolean correctAnswer;

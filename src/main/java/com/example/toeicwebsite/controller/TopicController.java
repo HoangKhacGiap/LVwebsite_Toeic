@@ -12,13 +12,13 @@ public class TopicController {
     @Autowired
     private TopicService topicService;
 
-    @GetMapping("/filterTopic")
-    public ResponseEntity<?> filterTopic(
-                                        @RequestParam(defaultValue = "easy") String levelName,
-                                        @RequestParam(defaultValue = "part_5_reading") String partName,
-                                        @RequestParam(defaultValue = "2") int numberOfTopic,
-                                        @RequestParam(defaultValue = "0") int pageNumber,
-                                        @RequestParam(defaultValue = "100") int pageSize) {
-        return ResponseEntity.ok(topicService.filterTopic(levelName, partName, numberOfTopic, pageNumber, pageSize));
-    }
+//    @GetMapping("/filterTopic")
+//    public ResponseEntity<?> filterTopic(
+//                                        @RequestParam(defaultValue = "easy") String levelName,
+//                                        @RequestParam(defaultValue = "part_5_reading") String partName,
+//                                        @RequestParam(defaultValue = "2") int numberOfTopic,
+//                                        @RequestParam(defaultValue = "0") int pageNumber,
+//                                        @RequestParam(defaultValue = "100") int pageSize) {
+//        return ResponseEntity.ok(topicService.filterTopic(levelName, partName, numberOfTopic, pageNumber, pageSize));
+//    }
 }

@@ -14,8 +14,6 @@ import java.util.List;
 public interface QuestionRepository extends JpaRepository<Question, Long>{
 
     //this query have problem cause the can't create bean problem
-
-
     List<Question> findAllByTopicId(Long topicId);
 
 }

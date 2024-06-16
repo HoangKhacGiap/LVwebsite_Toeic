@@ -25,27 +25,27 @@ public class TopicServiceImpl implements TopicService {
     private TestRepository testRepository;
 
 
-    @Override
-    public PaginationDTO filterTopic(String levelName, String partName, int numberOfTopic, int pageNumber, int pageSize) {
-        Page<Topic> page = topicRepository.filterTopic(levelName, partName, numberOfTopic, PageRequest.of(pageNumber, pageSize));
-        List<TopicDTO> list = new ArrayList<>();
-
-        for (Topic topic: page.getContent()) {
-
-            TopicDTO topicDTO = new TopicDTO();
-
-            topicDTO.setId(topic.getId());
-            topicDTO.setAudioName(topic.getAudio_name());
-            topicDTO.setImageName(topic.getImage_name());
-            topicDTO.setPathAudio(topic.getAudio_path());
-            topicDTO.setPathImage(topic.getImage_path());
-            topicDTO.setLevelId(topic.getLevel().getId());
-            topicDTO.setPartId(topic.getPart().getId());
-
-            list.add(topicDTO);
-        }
-        return new PaginationDTO(list, page.isFirst(), page.isLast(),
-                page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
-
-    }
+//    @Override
+//    public PaginationDTO filterTopic(String levelName, String partName, int numberOfTopic, int pageNumber, int pageSize) {
+//        Page<Topic> page = topicRepository.filterTopic(levelName, partName, numberOfTopic, PageRequest.of(pageNumber, pageSize));
+//        List<TopicDTO> list = new ArrayList<>();
+//
+//        for (Topic topic: page.getContent()) {
+//
+//            TopicDTO topicDTO = new TopicDTO();
+//
+//            topicDTO.setId(topic.getId());
+//            topicDTO.setAudioName(topic.getAudio_name());
+//            topicDTO.setImageName(topic.getImage_name());
+//            topicDTO.setPathAudio(topic.getAudio_path());
+//            topicDTO.setPathImage(topic.getImage_path());
+//            topicDTO.setLevelId(topic.getLevel().getId());
+//            topicDTO.setPartId(topic.getPart().getId());
+//
+//            list.add(topicDTO);
+//        }
+//        return new PaginationDTO(list, page.isFirst(), page.isLast(),
+//                page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
+//
+//    }
 }

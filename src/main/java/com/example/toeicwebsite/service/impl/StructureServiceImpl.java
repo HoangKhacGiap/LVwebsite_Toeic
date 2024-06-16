@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -48,11 +49,6 @@ public class StructureServiceImpl implements StructureService {
             structure.setKinfOfStructure(kindOfStructure);
             return structure;
         }).collect(Collectors.toList());
-//        for (int i = 0; i < structures.size(); i++) {
-//            for (int j = 0; j < structures.size(); j++) {
-//                if (structures)
-//            }
-//        }
 
         kindOfStructureRepository.save(kindOfStructure);
         structureRepository.saveAll(structures);
