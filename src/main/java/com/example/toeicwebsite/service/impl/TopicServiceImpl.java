@@ -3,9 +3,7 @@ package com.example.toeicwebsite.service.impl;
 import com.example.toeicwebsite.data.dto.TopicDTO;
 import com.example.toeicwebsite.data.entity.Structure;
 import com.example.toeicwebsite.data.entity.Topic;
-import com.example.toeicwebsite.data.repository.QuestionRepository;
 import com.example.toeicwebsite.data.repository.StructureRepository;
-import com.example.toeicwebsite.data.repository.TestRepository;
 import com.example.toeicwebsite.data.repository.TopicRepository;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.QuestionService;
@@ -15,7 +13,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,14 +26,25 @@ public class TopicServiceImpl implements TopicService {
 
     @Override
     public List<TopicDTO> getTopicsByStructure(Long structureId) {
-        Optional<Structure> structure = Optional.ofNullable(structureRepository.findById(structureId).orElseThrow(
-                () -> new ResourceNotFoundException(Collections.singletonMap("message", "structure không tồn tại"))));
+        Structure structure = structureRepository.findById(structureId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "structure không tồn tại")));
 
         List<Topic> topics = topicRepository.findAllByLevelNameAndPartId
-                (structure.get().getPart().getId(), structure.get().getLevel_of_topic());
+                (structure.getPart().getId(), structure.getLevel_of_topic());
         return topics.stream()
-                .limit(structure.get().getNumber_of_topic())
+                .limit(structure.getNumber_of_topic())
                 .map(this::topicConvertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    public List<Long> getListTopicsIDByStructure(Long structureId) {
+        Structure structure = structureRepository.findById(structureId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "structure không tồn tại")));
+
+        List<Topic> topics = topicRepository.findAllByLevelNameAndPartId
+                (structure.getPart().getId(), structure.getLevel_of_topic());
+        return topics.stream()
+                .map(Topic::getId)
                 .collect(Collectors.toList());
     }
 

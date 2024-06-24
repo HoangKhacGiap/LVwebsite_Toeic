@@ -26,6 +26,7 @@ public class QuestionServiceImpl implements QuestionService {
         return questions.stream().map(this::questionConvertToDTO).collect(Collectors.toList());
     }
 
+
     public List<AnswerDTO> getAllAnswerByQuestionId(Long questionId) {
         List<Answer> answers = answerRepository.findAllByQuestionId(questionId);
         return answers.stream().map(this::answerConvertToDTO).collect(Collectors.toList());
@@ -51,5 +52,12 @@ public class QuestionServiceImpl implements QuestionService {
         answerDTO.setQuestionId(answer.getQuestion().getId());
 
         return answerDTO;
+    }
+    //lấy danh sách questionID trong 1 topic
+    @Override
+    public List<Long> getAllQuestionsIDByTopicId(Long topicId) {
+        List<Question> questions = questionRepository.findAllByTopicId(topicId);
+
+        return questions.stream().map(Question::getId).collect(Collectors.toList());
     }
 }

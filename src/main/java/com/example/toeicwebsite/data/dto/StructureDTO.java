@@ -2,6 +2,8 @@ package com.example.toeicwebsite.data.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -13,5 +15,6 @@ public class StructureDTO {
     private int number_of_topic;
     private String level_of_topic;
     private Long part_id;
-//    private Long kindOfStructure_id;
+
+    List<TopicDTO> topics;
 }

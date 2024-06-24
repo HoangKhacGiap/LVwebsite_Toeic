@@ -16,4 +16,6 @@ public class TopicController {
     public ResponseEntity<?> getTopicsByStructureId(@PathVariable Long structureId) {
         return ResponseEntity.ok(topicService.getTopicsByStructure(structureId));
     }
+
+
 }

@@ -2,10 +2,8 @@ package com.example.toeicwebsite.service.impl;
 
 import com.example.toeicwebsite.data.dto.MessageResponse;
 import com.example.toeicwebsite.data.dto.StructureDTO;
-import com.example.toeicwebsite.data.entity.KindOfStructure;
-import com.example.toeicwebsite.data.entity.Level;
-import com.example.toeicwebsite.data.entity.Part;
-import com.example.toeicwebsite.data.entity.Structure;
+import com.example.toeicwebsite.data.dto.TopicDTO;
+import com.example.toeicwebsite.data.entity.*;
 import com.example.toeicwebsite.data.repository.KindOfStructureRepository;
 import com.example.toeicwebsite.data.repository.LevelRepository;
 import com.example.toeicwebsite.data.repository.PartRepository;
@@ -14,6 +12,7 @@ import com.example.toeicwebsite.exception.ConflictException;
 import com.example.toeicwebsite.exception.ExceptionCustom;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.StructureService;
+import com.example.toeicwebsite.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -35,6 +34,9 @@ public class StructureServiceImpl implements StructureService {
     private PartRepository partRepository;
     @Autowired
     private LevelRepository levelRepository;
+
+    @Autowired
+    private TopicService topicService;
     @Override
     public Long saveStructure(List<StructureDTO> structureDTOs) {
         KindOfStructure kindOfStructure = new KindOfStructure();
@@ -65,4 +67,34 @@ public class StructureServiceImpl implements StructureService {
 
         return kindOfStructure.getId();
     }
+
+    @Override
+    public List<StructureDTO> getStructureByKindStructureId(Long kindStructureId) {
+        KindOfStructure kindOfStructure = kindOfStructureRepository.findById(kindStructureId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "kindOfStructure không tồn tại")));
+
+        List<Structure> structures = structureRepository.findAllByKinfOfStructureId(kindStructureId);
+        if (structures.isEmpty()) {
+            throw new ResourceNotFoundException(Collections.singletonMap("message", "không có cấu trúc nào"));
+        }
+//                (structure.getPart().getId(), structure.getLevel_of_topic());
+        return structures.stream()
+//                .limit(structure.getNumber_of_topic())
+                .map(this::structureConvertToDTO)
+                .collect(Collectors.toList());
+    }
+
+    private StructureDTO structureConvertToDTO(Structure structure) {
+        StructureDTO structureDTO = new StructureDTO();
+
+        structureDTO.setId(structure.getId());
+        structureDTO.setName(structure.getName());
+        structureDTO.setNumber_of_topic(structure.getNumber_of_topic());
+        structureDTO.setLevel_of_topic(structure.getLevel_of_topic());
+        structureDTO.setPart_id(structure.getPart().getId());
+        structureDTO.setTopics(topicService.getTopicsByStructure(structure.getId()));
+
+        return structureDTO;
+    }
+
 }

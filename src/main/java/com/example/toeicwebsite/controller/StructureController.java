@@ -2,6 +2,7 @@ package com.example.toeicwebsite.controller;
 
 import com.example.toeicwebsite.data.dto.StructureDTO;
 import com.example.toeicwebsite.service.StructureService;
+import com.example.toeicwebsite.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -16,8 +17,15 @@ public class StructureController {
     @Autowired
     private StructureService structureService;
 
+
     @PostMapping("/saveStructure")
     public ResponseEntity<?> saveStructure(@Valid @RequestBody List<StructureDTO> structureDTOs) {
         return ResponseEntity.ok(structureService.saveStructure(structureDTOs));
+    }
+
+
+    @GetMapping("/ExamTest/{structureId}")
+    public ResponseEntity<?> getStructureByStructureId(@PathVariable Long structureId) {
+        return ResponseEntity.ok(structureService.getStructureByKindStructureId(structureId));
     }
 }
