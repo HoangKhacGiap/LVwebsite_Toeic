@@ -25,6 +25,11 @@ public class UserController {
         return ResponseEntity.ok(userService.updateNguoiDung(userDTO));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping("/profile")
+    public ResponseEntity<?> getNguoiDungHienTai() {
+        return ResponseEntity.ok(userService.getNguoiDungHienTai());
+    }
 //    @PostMapping("/request")
 //    public ResponseEntity<String> requestResetPassword(@RequestParam("email") String email) {
 //        User user = userService.getUserByEmail(email);

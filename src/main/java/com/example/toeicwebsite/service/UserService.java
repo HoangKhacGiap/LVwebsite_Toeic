@@ -12,6 +12,8 @@ public interface UserService {
 
     MessageResponse updateNguoiDung(UserDTO userDTO);
 
+    UserDTO getNguoiDungHienTai();
+
 //    void createPasswordResetTokenForUser(String token);
 //
 //    void sendPasswordResetEmail(User user, String token);
