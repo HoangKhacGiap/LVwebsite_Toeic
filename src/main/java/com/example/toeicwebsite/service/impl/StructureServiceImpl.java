@@ -84,6 +84,17 @@ public class StructureServiceImpl implements StructureService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<Long> getListStructureIDByKindStructure(Long kindStructureId) {
+        KindOfStructure kindOfStructure = kindOfStructureRepository.findById(kindStructureId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "Kind structure không tồn tại")));
+
+        List<Structure> structures = structureRepository.findAllByKinfOfStructureId(kindOfStructure.getId());
+        return structures.stream()
+                .map(Structure::getId)
+                .collect(Collectors.toList());
+    }
+
     private StructureDTO structureConvertToDTO(Structure structure) {
         StructureDTO structureDTO = new StructureDTO();
 

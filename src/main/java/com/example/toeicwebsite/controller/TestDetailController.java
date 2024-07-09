@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
-@RequestMapping("/api/topicDetail")
+@RequestMapping("/api/testDetail")
 public class TestDetailController {
     @Autowired
     private TestDetailService testDetailService;
@@ -16,5 +16,10 @@ public class TestDetailController {
     @PostMapping("/save")
     public ResponseEntity<?> saveTestDetail(@RequestParam Long structureId, @RequestParam Long testId) {
         return ResponseEntity.ok(testDetailService.saveListTestDetail(structureId, testId));
+    }
+
+    @PostMapping("/saveList")
+    public ResponseEntity<?> saveListTestDetail(@RequestParam Long kindOfStructureId, @RequestParam Long testId) {
+        return ResponseEntity.ok(testDetailService.saveTestDetail(kindOfStructureId, testId));
     }
 }

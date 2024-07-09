@@ -8,6 +8,7 @@ import com.example.toeicwebsite.data.repository.TestRepository;
 import com.example.toeicwebsite.data.repository.TopicRepository;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.QuestionService;
+import com.example.toeicwebsite.service.StructureService;
 import com.example.toeicwebsite.service.TestDetailService;
 import com.example.toeicwebsite.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +32,8 @@ public class TestDetailServiceImpl implements TestDetailService {
     private TopicRepository topicRepository;
     @Autowired
     private TopicService topicService;
+    @Autowired
+    private StructureService structureService;
 
     @Override
     public MessageResponse saveListTestDetail(Long structureId, Long testId) {
@@ -52,6 +55,32 @@ public class TestDetailServiceImpl implements TestDetailService {
                 testDetail.setQuestion(question);
 
                 testDetailRepository.save(testDetail);
+            }
+        }
+        return new MessageResponse(200, "Tạo chi tiết đề thi thành công");
+    }
+
+    @Override
+    public MessageResponse saveTestDetail(Long kindOfStructureId, Long testId) {
+        Test test = testRepository.findById(testId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "không tìm thấy đề thi"))
+        );
+        List<Long> structureId = structureService.getListStructureIDByKindStructure(kindOfStructureId);
+        for (Long id : structureId){
+            List<Long> topicsListId = topicService.getListTopicsIDByStructure(id);
+            for(Long topicId : topicsListId){
+                List<Question> questionList = questionRepository.findAllByTopicId(topicId);
+                if (questionList.isEmpty()) {
+                    throw new ResourceNotFoundException(Collections.singletonMap("message", "không tìm thấy câu hỏi"));
+                }
+                for (Question question : questionList){
+                    TestDetail testDetail = new TestDetail();
+
+                    testDetail.setTest(test);
+                    testDetail.setQuestion(question);
+
+                    testDetailRepository.save(testDetail);
+                }
             }
         }
         return new MessageResponse(200, "Tạo chi tiết đề thi thành công");

@@ -8,4 +8,7 @@ public interface StructureService {
     Long saveStructure(List<StructureDTO> structures);
 
     List<StructureDTO> getStructureByKindStructureId(Long kindStructureId);
+
+    List<Long> getListStructureIDByKindStructure(Long kindStructureId);
+
 }
