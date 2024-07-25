@@ -57,7 +57,7 @@ public class TestDetailServiceImpl implements TestDetailService {
                 testDetailRepository.save(testDetail);
             }
         }
-        return new MessageResponse(200, "Tạo chi tiết đề thi thành công");
+        return new MessageResponse(200, "Tạo chi tiết đề thi từ structure id thành công");
     }
 
     @Override
@@ -83,6 +83,6 @@ public class TestDetailServiceImpl implements TestDetailService {
                 }
             }
         }
-        return new MessageResponse(200, "Tạo chi tiết đề thi thành công");
+        return new MessageResponse(200, "Tạo chi tiết đề thi từ kind structure id thành công");
     }
 }

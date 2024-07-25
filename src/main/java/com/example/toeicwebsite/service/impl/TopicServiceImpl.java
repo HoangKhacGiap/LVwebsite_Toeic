@@ -44,6 +44,8 @@ public class TopicServiceImpl implements TopicService {
         List<Topic> topics = topicRepository.findAllByLevelNameAndPartId
                 (structure.getPart().getId(), structure.getLevel_of_topic());
         return topics.stream()
+                .limit(structure.getNumber_of_topic())
+
                 .map(Topic::getId)
                 .collect(Collectors.toList());
     }
