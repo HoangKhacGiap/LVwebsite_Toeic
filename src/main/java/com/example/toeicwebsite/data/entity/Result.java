@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Data
@@ -22,6 +23,9 @@ public class Result {
 
     @Column(name = "status", columnDefinition = "NVARCHAR(250)")
     private String status;
+
+    @Column(name = "create_at")
+    private Date createAt;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
