@@ -23,4 +23,15 @@ public class ResultController {
     public ResponseEntity<?> saveResult(@Valid @RequestBody String totalMark) {
         return ResponseEntity.ok(resultService.saveResult(totalMark));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+//    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/filterUserResult")
+    public ResponseEntity<?> filterUserResult(@RequestParam(defaultValue = "0") int pageNumber,
+                                         @RequestParam(defaultValue = "10") int pageSize,
+                                         @RequestParam(defaultValue = "") String keyword) {
+
+        return ResponseEntity.ok(resultService.filterResult(keyword, pageNumber, pageSize));
+    }
+
 }
