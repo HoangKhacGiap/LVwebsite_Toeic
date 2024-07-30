@@ -3,6 +3,7 @@ package com.example.toeicwebsite.service.impl;
 import com.example.toeicwebsite.data.dto.MessageResponse;
 import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.ResultDTO;
+import com.example.toeicwebsite.data.dto.ResultInputDTO;
 import com.example.toeicwebsite.data.entity.Result;
 import com.example.toeicwebsite.data.entity.User;
 import com.example.toeicwebsite.data.repository.ResultRepository;
@@ -28,7 +29,7 @@ public class ResultServiceImpl implements ResultService {
     @Autowired
     private ResultRepository resultRepository;
     @Override
-    public MessageResponse saveResult(String totalMark) {
+    public MessageResponse saveResult(ResultInputDTO resultInputDTO) {
         Date currentDate = new Date();
         User userCurrent = getNguoiDungByToken();
         String status = "Hoan thanh";
@@ -36,9 +37,10 @@ public class ResultServiceImpl implements ResultService {
         Result result = new Result();
 //        result.setId(resultDTO.getId());
         result.setStatus(status);
-        result.setTotalMark(totalMark);
+        result.setTotalMark(resultInputDTO.getTotalMark());
         result.setCreateAt(currentDate);
         result.setUser(userCurrent);
+        result.setStructureId(resultInputDTO.getStructureId());
 
         resultRepository.save(result);
 
@@ -62,7 +64,7 @@ public class ResultServiceImpl implements ResultService {
             resultDTO.setStatus(result.getStatus());
             resultDTO.setTotalMark(result.getTotalMark());
             resultDTO.setCreateAt(result.getCreateAt());
-//            resultDTO.setUser(result.getUser());
+            resultDTO.setStructureId(result.getStructureId());
 
             list.add(resultDTO);
         }

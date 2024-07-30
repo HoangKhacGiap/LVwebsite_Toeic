@@ -27,6 +27,9 @@ public class Result {
     @Column(name = "create_at")
     private Date createAt;
 
+    @Column(name = "structureId")
+    private Long structureId;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", nullable = false)
     private User user;

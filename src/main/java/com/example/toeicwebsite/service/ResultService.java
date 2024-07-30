@@ -3,9 +3,10 @@ package com.example.toeicwebsite.service;
 import com.example.toeicwebsite.data.dto.MessageResponse;
 import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.ResultDTO;
+import com.example.toeicwebsite.data.dto.ResultInputDTO;
 
 public interface ResultService {
-    MessageResponse saveResult(String totalMark);
+    MessageResponse saveResult(ResultInputDTO resultInputDTO);
 
     PaginationDTO filterResult(String keyword, int pageNumber, int pageSize);
 

@@ -1,5 +1,6 @@
 package com.example.toeicwebsite.controller;
 
+import com.example.toeicwebsite.data.dto.ResultInputDTO;
 import com.example.toeicwebsite.data.dto.SkillDTO;
 import com.example.toeicwebsite.service.ResultService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
@@ -20,8 +21,8 @@ public class ResultController {
     @SecurityRequirement(name = "Bearer Authentication")
 //    @PreAuthorize("isAuthenticated()")
     @PostMapping("/saveResult")
-    public ResponseEntity<?> saveResult(@Valid @RequestBody String totalMark) {
-        return ResponseEntity.ok(resultService.saveResult(totalMark));
+    public ResponseEntity<?> saveResult(@Valid @RequestBody ResultInputDTO resultInputDTO) {
+        return ResponseEntity.ok(resultService.saveResult(resultInputDTO));
     }
 
     @SecurityRequirement(name = "Bearer Authentication")
