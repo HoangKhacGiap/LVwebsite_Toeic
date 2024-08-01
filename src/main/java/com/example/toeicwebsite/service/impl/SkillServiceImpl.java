@@ -3,10 +3,15 @@ package com.example.toeicwebsite.service.impl;
 import com.example.toeicwebsite.data.dto.MessageResponse;
 import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.SkillDTO;
+import com.example.toeicwebsite.data.entity.Part;
 import com.example.toeicwebsite.data.entity.Skill;
+import com.example.toeicwebsite.data.entity.Topic;
 import com.example.toeicwebsite.data.mapper.SkillMapper;
+import com.example.toeicwebsite.data.repository.PartRepository;
 import com.example.toeicwebsite.data.repository.SkillRepository;
+import com.example.toeicwebsite.data.repository.TopicRepository;
 import com.example.toeicwebsite.exception.ConflictException;
+import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.SkillService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +29,8 @@ public class SkillServiceImpl implements SkillService {
     private SkillRepository skillRepository;
     @Autowired
     private SkillMapper skillMapper;
+    @Autowired
+    private PartRepository partRepository;
     @Override
     public MessageResponse createSkill(SkillDTO skillDTO) {
         if (skillRepository.findByName(skillDTO.getName()).isPresent()) {
@@ -50,4 +57,27 @@ public class SkillServiceImpl implements SkillService {
                 page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
 
     }
+
+    @Override
+    public MessageResponse updateSkill(SkillDTO skillDTO) {
+        Skill skill = skillRepository.findById(skillDTO.getId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillDTO.getId()))
+        );
+
+        skill.setName(skillDTO.getName());
+        skillRepository.save(skill);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "update skill thanh cong");
+    }
+
+//    @Override
+//    public MessageResponse deleteSkill(SkillDTO skillDTO) {
+//        Skill skill = skillRepository.findById(skillDTO.getId()).orElseThrow(
+//                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillDTO.getId()))
+//        );
+//        Part part = partRepository.findPartBySkill(skill.getId()).orElse(
+//                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillDTO.getId()))
+//        );
+//        return new MessageResponse(HttpServletResponse.SC_OK, "delete skill thanh cong");
+//    }
 }

@@ -33,4 +33,11 @@ public class SkillController {
 
         return ResponseEntity.ok(skillService.filterSkill(keyword, pageNumber, pageSize));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @PutMapping("/updateSkill")
+    public ResponseEntity<?> updateSkill(@Valid @RequestBody SkillDTO skillDTO) {
+        return ResponseEntity.ok(skillService.updateSkill(skillDTO));
+    }
 }

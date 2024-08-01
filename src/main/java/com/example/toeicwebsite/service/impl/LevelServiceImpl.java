@@ -4,9 +4,11 @@ import com.example.toeicwebsite.data.dto.LevelDTO;
 import com.example.toeicwebsite.data.dto.MessageResponse;
 import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.entity.Level;
+import com.example.toeicwebsite.data.entity.Skill;
 import com.example.toeicwebsite.data.mapper.LevelMapper;
 import com.example.toeicwebsite.data.repository.LevelRepository;
 import com.example.toeicwebsite.exception.ConflictException;
+import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.LevelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -48,5 +50,17 @@ public class LevelServiceImpl implements LevelService {
         return new PaginationDTO(list, page.isFirst(), page.isLast(),
                 page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
 
+    }
+
+    @Override
+    public MessageResponse updateLevel(LevelDTO levelDTO) {
+        Level level = levelRepository.findById(levelDTO.getId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("level id", levelDTO.getId()))
+        );
+
+        level.setName(levelDTO.getName());
+        levelRepository.save(level);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "update skill thanh cong");
     }
 }

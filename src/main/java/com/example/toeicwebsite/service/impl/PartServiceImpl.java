@@ -56,4 +56,24 @@ public class PartServiceImpl implements PartService {
                 page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
 
     }
+
+    @Override
+    public MessageResponse updatePart(PartDTO partDTO) {
+        Part part = partRepository.findById(partDTO.getId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("part id", partDTO.getId()))
+        );
+        Skill skill = skillRepository.findById(partDTO.getSkillId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "kỹ năng không toofn tại"))
+        );
+
+        part.setName(partDTO.getName());
+        part.setDescription(partDTO.getDescription());
+        part.setPart_number(partDTO.getPart_number());
+        part.setSkill(skill);
+//        part.setSkill(partDTO.get);
+
+        partRepository.save(part);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "update part thanh cong");
+    }
 }

@@ -14,6 +14,9 @@ public interface UserService {
 
     UserDTO getNguoiDungHienTai();
 
+    PaginationDTO filterSkill(String keyword, int pageNumber, int pageSize);
+
+
 //    void createPasswordResetTokenForUser(String token);
 //
 //    void sendPasswordResetEmail(User user, String token);

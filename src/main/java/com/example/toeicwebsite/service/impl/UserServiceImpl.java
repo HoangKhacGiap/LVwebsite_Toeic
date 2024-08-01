@@ -2,6 +2,7 @@ package com.example.toeicwebsite.service.impl;
 
 import com.example.toeicwebsite.data.dto.*;
 import com.example.toeicwebsite.data.entity.Role;
+import com.example.toeicwebsite.data.entity.Skill;
 import com.example.toeicwebsite.data.entity.User;
 import com.example.toeicwebsite.data.mapper.UserMapper;
 import com.example.toeicwebsite.data.repository.RoleRepository;
@@ -14,6 +15,8 @@ import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.JwtService;
 import com.example.toeicwebsite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +29,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -137,6 +142,30 @@ public class UserServiceImpl implements UserService {
         userDTO.setPhoneNumber(userCurrent.getPhoneNumber());
 
         return userDTO;
+    }
+
+    @Override
+    public PaginationDTO filterSkill(String keyword, int pageNumber, int pageSize) {
+        Page<User> page = userRepository.filterUser(keyword, PageRequest.of(pageNumber, pageSize));
+        List<UserDTO> list = new ArrayList<>();
+
+        for (User user: page.getContent()) {
+
+//            SkillDTO skillDTO = skillMapper.toDTO(skill);
+            UserDTO userDTO = new UserDTO();
+
+            userDTO.setId(user.getId());
+            userDTO.setName(user.getName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+//            userDTO.setRole(user.getRole().getName());
+
+            list.add(userDTO);
+        }
+        return new PaginationDTO(list, page.isFirst(), page.isLast(),
+                page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
+
     }
 
 
