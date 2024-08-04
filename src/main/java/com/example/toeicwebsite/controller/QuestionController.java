@@ -1,8 +1,10 @@
 package com.example.toeicwebsite.controller;
 
 import com.example.toeicwebsite.service.QuestionService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
@@ -20,5 +22,15 @@ public class QuestionController {
     @GetMapping("/listid/{topicId}")
     public ResponseEntity<?> getAllQuestionsIdByTopicId(@PathVariable Long topicId) {
         return ResponseEntity.ok(questionService.getAllQuestionsIDByTopicId(topicId));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/filterQuestion")
+    public ResponseEntity<?> filterQuestion(@RequestParam(defaultValue = "0") int pageNumber,
+                                         @RequestParam(defaultValue = "10") int pageSize,
+                                         @RequestParam(defaultValue = "") String keyword) {
+
+        return ResponseEntity.ok(questionService.filterQuestion(keyword, pageNumber, pageSize));
     }
 }

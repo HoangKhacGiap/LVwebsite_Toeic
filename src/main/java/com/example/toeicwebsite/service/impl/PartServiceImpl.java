@@ -35,8 +35,16 @@ public class PartServiceImpl implements PartService {
             throw new ConflictException(Collections.singletonMap("part name", partDTO.getName()));
         }
         else {
-            Part part = partMapper.toEntity(partDTO);
+//            Part part = partMapper.toEntity(partDTO);
+            Part part = new Part();
+
+
+            part.setName(partDTO.getName());
+            part.setPart_number(partDTO.getPart_number());
+            part.setDescription(partDTO.getDescription());
+//            part.setTest(partDTO.getTest());
             part.setSkill(skill);
+
             partRepository.save(part);
         }
         return new MessageResponse(HttpServletResponse.SC_OK, "tạo part thành công");
@@ -69,6 +77,7 @@ public class PartServiceImpl implements PartService {
         part.setName(partDTO.getName());
         part.setDescription(partDTO.getDescription());
         part.setPart_number(partDTO.getPart_number());
+//        part.set
         part.setSkill(skill);
 //        part.setSkill(partDTO.get);
 

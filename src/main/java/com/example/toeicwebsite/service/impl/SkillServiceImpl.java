@@ -70,14 +70,17 @@ public class SkillServiceImpl implements SkillService {
         return new MessageResponse(HttpServletResponse.SC_OK, "update skill thanh cong");
     }
 
-//    @Override
-//    public MessageResponse deleteSkill(SkillDTO skillDTO) {
-//        Skill skill = skillRepository.findById(skillDTO.getId()).orElseThrow(
-//                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillDTO.getId()))
+    @Override
+    public MessageResponse deleteSkill(Long skillId) {
+        Skill skill = skillRepository.findById(skillId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillId))
+        );
+//        Part part = partRepository.find(skill).orElseThrow(
+//                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillId))
 //        );
-//        Part part = partRepository.findPartBySkill(skill.getId()).orElse(
-//                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillDTO.getId()))
-//        );
-//        return new MessageResponse(HttpServletResponse.SC_OK, "delete skill thanh cong");
-//    }
+
+        skillRepository.delete(skill);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "xoa skill thanh cong");
+    }
 }

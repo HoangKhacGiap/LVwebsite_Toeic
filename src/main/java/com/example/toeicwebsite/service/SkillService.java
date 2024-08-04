@@ -11,6 +11,5 @@ public interface SkillService {
 
     MessageResponse updateSkill(SkillDTO skillDTO);
 
-//    MessageResponse deleteSkill(SkillDTO skillDTO);
-
+    MessageResponse deleteSkill(Long skillId);
 }
