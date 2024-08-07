@@ -4,9 +4,12 @@ import com.example.toeicwebsite.data.dto.LevelDTO;
 import com.example.toeicwebsite.data.dto.MessageResponse;
 import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.entity.Level;
+import com.example.toeicwebsite.data.entity.Part;
 import com.example.toeicwebsite.data.entity.Skill;
+import com.example.toeicwebsite.data.entity.Topic;
 import com.example.toeicwebsite.data.mapper.LevelMapper;
 import com.example.toeicwebsite.data.repository.LevelRepository;
+import com.example.toeicwebsite.data.repository.TopicRepository;
 import com.example.toeicwebsite.exception.ConflictException;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.LevelService;
@@ -25,6 +28,9 @@ public class LevelServiceImpl implements LevelService {
     private LevelRepository levelRepository;
     @Autowired
     private LevelMapper levelMapper;
+
+    @Autowired
+    private TopicRepository topicRepository;
     @Override
     public MessageResponse createLevel(LevelDTO levelDTO) {
         if (levelRepository.findByName(levelDTO.getName()).isPresent()) {
@@ -62,5 +68,20 @@ public class LevelServiceImpl implements LevelService {
         levelRepository.save(level);
 
         return new MessageResponse(HttpServletResponse.SC_OK, "update skill thanh cong");
+    }
+
+    @Override
+    public MessageResponse deleteLevel(Long levelId) {
+        Level level = levelRepository.findById(levelId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("Level id khong ton tai", levelId))
+        );
+        List<Topic> topics = topicRepository.findByLevel_Id(levelId);
+        if (!topics.isEmpty()) {
+            throw new ConflictException(Collections.singletonMap("Da ton tai topic cua level nay", levelId));
+        }
+
+        levelRepository.delete(level);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "xoa Level thanh cong");
     }
 }

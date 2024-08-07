@@ -73,11 +73,12 @@ public class SkillServiceImpl implements SkillService {
     @Override
     public MessageResponse deleteSkill(Long skillId) {
         Skill skill = skillRepository.findById(skillId).orElseThrow(
-                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillId))
+                () -> new ResourceNotFoundException(Collections.singletonMap("Skill id khong ton tai", skillId))
         );
-//        Part part = partRepository.find(skill).orElseThrow(
-//                () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillId))
-//        );
+        List<Part> parts = partRepository.findBySkill_Id(skillId);
+        if (!parts.isEmpty()) {
+            throw new ConflictException(Collections.singletonMap("Da ton tai Part cua Skill nay", skillId));
+        }
 
         skillRepository.delete(skill);
 

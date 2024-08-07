@@ -40,4 +40,11 @@ public class LevelController {
     public ResponseEntity<?> updateLevel(@Valid @RequestBody LevelDTO levelDTO) {
         return ResponseEntity.ok(levelService.updateLevel(levelDTO));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @DeleteMapping ("/deleteLevel")
+    public ResponseEntity<?> deleteLevel(@RequestParam Long levelId) {
+        return ResponseEntity.ok(levelService.deleteLevel(levelId));
+    }
 }

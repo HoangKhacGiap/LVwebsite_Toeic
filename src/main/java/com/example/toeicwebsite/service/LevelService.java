@@ -10,5 +10,5 @@ public interface LevelService {
     PaginationDTO filterLevel(String keyword, int pageNumber, int pageSize);
     MessageResponse updateLevel(LevelDTO levelDTO);
 
-
+    MessageResponse deleteLevel(Long skillId);
 }

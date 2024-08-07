@@ -40,4 +40,11 @@ public class SkillController {
     public ResponseEntity<?> updateSkill(@Valid @RequestBody SkillDTO skillDTO) {
         return ResponseEntity.ok(skillService.updateSkill(skillDTO));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @DeleteMapping ("/deleteSkill")
+    public ResponseEntity<?> deleteSkill(@RequestParam Long skillId) {
+        return ResponseEntity.ok(skillService.deleteSkill(skillId));
+    }
 }
