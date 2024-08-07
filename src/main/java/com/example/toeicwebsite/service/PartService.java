@@ -11,4 +11,5 @@ public interface PartService {
 
     MessageResponse updatePart(PartDTO partDTO);
 
+    MessageResponse deletePart(Long partId);
 }

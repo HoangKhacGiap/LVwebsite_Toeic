@@ -36,4 +36,17 @@ public class PartController {
 
         return ResponseEntity.ok(partService.filterPart(keyword, pageNumber, pageSize));
     }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @DeleteMapping ("/deletePart")
+    public ResponseEntity<?> deletePart(@RequestParam Long partId) {
+        return ResponseEntity.ok(partService.deletePart(partId));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @PutMapping ("/updatePart")
+    public ResponseEntity<?> updatePart(@Valid @RequestBody PartDTO partDTO) {
+        return ResponseEntity.ok(partService.updatePart(partDTO));
+    }
 }

@@ -5,10 +5,7 @@ import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.SkillDTO;
 import com.example.toeicwebsite.data.dto.TopicDTO;
 import com.example.toeicwebsite.data.entity.*;
-import com.example.toeicwebsite.data.repository.LevelRepository;
-import com.example.toeicwebsite.data.repository.PartRepository;
-import com.example.toeicwebsite.data.repository.StructureRepository;
-import com.example.toeicwebsite.data.repository.TopicRepository;
+import com.example.toeicwebsite.data.repository.*;
 import com.example.toeicwebsite.exception.ConflictException;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.QuestionService;
@@ -37,6 +34,9 @@ public class TopicServiceImpl implements TopicService {
     private LevelRepository levelRepository;
     @Autowired
     private PartRepository partRepository;
+
+    @Autowired
+    private QuestionRepository questionRepository;
 
     @Override
     public List<TopicDTO> getTopicsByStructure(Long structureId) {
@@ -135,5 +135,18 @@ public class TopicServiceImpl implements TopicService {
 
         return topicDTO;
     }
+    @Override
+    public MessageResponse deleteTopic(Long topicId) {
+        Topic topic = topicRepository.findById(topicId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("Topic khong ton tai",topicId))
+        );
+        List<Question> questions = questionRepository.findAllByTopicId(topicId);
+        if (!questions.isEmpty()) {
+            throw new ConflictException(Collections.singletonMap("Da ton tai topic cua part nay", topicId));
+        }
 
+        topicRepository.delete(topic);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "xoa topic thanh cong");
+    }
 }

@@ -16,4 +16,6 @@ public interface TopicService {
 
     MessageResponse createTopic(TopicDTO topicDTO);
 
+    MessageResponse deleteTopic(Long topicId);
+
 }

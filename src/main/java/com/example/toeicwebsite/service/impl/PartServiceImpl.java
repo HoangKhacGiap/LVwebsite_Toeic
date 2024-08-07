@@ -3,9 +3,11 @@ package com.example.toeicwebsite.service.impl;
 import com.example.toeicwebsite.data.dto.*;
 import com.example.toeicwebsite.data.entity.Part;
 import com.example.toeicwebsite.data.entity.Skill;
+import com.example.toeicwebsite.data.entity.Topic;
 import com.example.toeicwebsite.data.mapper.PartMapper;
 import com.example.toeicwebsite.data.repository.PartRepository;
 import com.example.toeicwebsite.data.repository.SkillRepository;
+import com.example.toeicwebsite.data.repository.TopicRepository;
 import com.example.toeicwebsite.exception.ConflictException;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.PartService;
@@ -27,6 +29,8 @@ public class PartServiceImpl implements PartService {
     private PartMapper partMapper;
     @Autowired
     private SkillRepository skillRepository;
+    @Autowired
+    private TopicRepository topicRepository;
     @Override
     public MessageResponse createPart(PartDTO partDTO) {
         Skill skill = skillRepository.findById(partDTO.getSkillId()).orElseThrow(
@@ -77,12 +81,25 @@ public class PartServiceImpl implements PartService {
         part.setName(partDTO.getName());
         part.setDescription(partDTO.getDescription());
         part.setPart_number(partDTO.getPart_number());
-//        part.set
         part.setSkill(skill);
-//        part.setSkill(partDTO.get);
 
         partRepository.save(part);
 
         return new MessageResponse(HttpServletResponse.SC_OK, "update part thanh cong");
+    }
+
+    @Override
+    public MessageResponse deletePart(Long partId) {
+        Part part = partRepository.findById(partId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("Part id khong ton tai", partId))
+        );
+        List<Topic> topics = topicRepository.findByPart_Id(partId);
+        if (!topics.isEmpty()) {
+            throw new ConflictException(Collections.singletonMap("Da ton tai topic cua part nay", partId));
+        }
+
+        partRepository.delete(part);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "xoa part thanh cong");
     }
 }

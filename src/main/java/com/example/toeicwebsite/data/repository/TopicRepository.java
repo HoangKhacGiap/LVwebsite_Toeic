@@ -14,6 +14,10 @@ import java.util.List;
 @Repository
 public interface TopicRepository extends JpaRepository<Topic, Long>{
     List<Topic> findByLevel_Id(Long levelId);
+
+    List<Topic> findByPart_Id(Long partId);
+
+
     @Query("SELECT t FROM Topic t WHERE (t.part.id = :partId AND t.level.name = :levelOfTopic)" +
             "ORDER BY RAND()"
     )

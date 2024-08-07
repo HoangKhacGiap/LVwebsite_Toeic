@@ -39,4 +39,11 @@ public class TopicController {
     public ResponseEntity<?> createTopic(@Valid @RequestBody TopicDTO topicDTO) {
         return ResponseEntity.ok(topicService.createTopic(topicDTO));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @DeleteMapping ("/deleteTopic")
+    public ResponseEntity<?> deleteTopic(@RequestParam Long topicId) {
+        return ResponseEntity.ok(topicService.deleteTopic(topicId));
+    }
 }
