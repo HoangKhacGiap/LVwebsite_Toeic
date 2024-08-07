@@ -1,13 +1,15 @@
 package com.example.toeicwebsite.service.impl;
 
+import com.example.toeicwebsite.data.dto.MessageResponse;
 import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.SkillDTO;
 import com.example.toeicwebsite.data.dto.TopicDTO;
-import com.example.toeicwebsite.data.entity.Skill;
-import com.example.toeicwebsite.data.entity.Structure;
-import com.example.toeicwebsite.data.entity.Topic;
+import com.example.toeicwebsite.data.entity.*;
+import com.example.toeicwebsite.data.repository.LevelRepository;
+import com.example.toeicwebsite.data.repository.PartRepository;
 import com.example.toeicwebsite.data.repository.StructureRepository;
 import com.example.toeicwebsite.data.repository.TopicRepository;
+import com.example.toeicwebsite.exception.ConflictException;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.QuestionService;
 import com.example.toeicwebsite.service.TopicService;
@@ -16,6 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,6 +32,11 @@ public class TopicServiceImpl implements TopicService {
     private StructureRepository structureRepository;
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private LevelRepository levelRepository;
+    @Autowired
+    private PartRepository partRepository;
 
     @Override
     public List<TopicDTO> getTopicsByStructure(Long structureId) {
@@ -81,6 +89,34 @@ public class TopicServiceImpl implements TopicService {
         return new PaginationDTO(list, page.isFirst(), page.isLast(),
                 page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
 
+    }
+
+    @Override
+    public MessageResponse createTopic(TopicDTO topicDTO) {
+        Level level = levelRepository.findById(topicDTO.getLevelId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "level không tồn tại")));
+        Part part = partRepository.findById(topicDTO.getPartId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "part không tồn tại")));
+//        if (topicRepository.find(partDTO.getName()).isPresent()) {
+//            throw new ConflictException(Collections.singletonMap("part name", partDTO.getName()));
+//        }
+//        else {
+//            Part part = partMapper.toEntity(partDTO);
+            Topic topic = new Topic();
+            topic.setName(topicDTO.getName());
+            topic.setContent(topicDTO.getName());
+            topic.setAudio_name(topicDTO.getAudioName());
+            topic.setAudio_path(topicDTO.getAudioName());
+
+            topic.setImage_name(topicDTO.getImageName());
+            topic.setImage_path(topicDTO.getImageName());
+
+            topic.setLevel(level);
+            topic.setPart(part);
+
+            topicRepository.save(topic);
+//        }
+        return new MessageResponse(HttpServletResponse.SC_OK, "tạo part thành công");
     }
 
     private TopicDTO topicConvertToDTO(Topic topic) {

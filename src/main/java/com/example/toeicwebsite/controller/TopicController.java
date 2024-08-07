@@ -1,11 +1,15 @@
 package com.example.toeicwebsite.controller;
 
+import com.example.toeicwebsite.data.dto.PartDTO;
+import com.example.toeicwebsite.data.dto.TopicDTO;
 import com.example.toeicwebsite.service.TopicService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -27,5 +31,12 @@ public class TopicController {
                                          @RequestParam(defaultValue = "") String keyword) {
 
         return ResponseEntity.ok(topicService.filterTopic(keyword, pageNumber, pageSize));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @PostMapping("/createTopic")
+    public ResponseEntity<?> createTopic(@Valid @RequestBody TopicDTO topicDTO) {
+        return ResponseEntity.ok(topicService.createTopic(topicDTO));
     }
 }

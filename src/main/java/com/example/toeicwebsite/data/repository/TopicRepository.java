@@ -33,6 +33,9 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
             "WHERE (:keyword = '' " +
             "OR ncc.name LIKE %:keyword% " +
             "OR ncc.image_name LIKE %:keyword% " +
+            "OR ncc.level.name LIKE %:keyword% " +
+            "OR ncc.part.name LIKE %:keyword% " +
+
             "OR ncc.audio_name LIKE %:keyword%) " +
             "ORDER BY ncc.id DESC")
     Page<Topic> filterTopic(@Param("keyword") String keyword, Pageable pageable);
