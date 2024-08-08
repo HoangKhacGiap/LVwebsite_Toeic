@@ -1,22 +1,26 @@
 package com.example.toeicwebsite.service.impl;
 
-import com.example.toeicwebsite.data.dto.AnswerDTO;
-import com.example.toeicwebsite.data.dto.PaginationDTO;
-import com.example.toeicwebsite.data.dto.QuestionDTO;
-import com.example.toeicwebsite.data.dto.SkillDTO;
+import com.example.toeicwebsite.data.dto.*;
 import com.example.toeicwebsite.data.entity.Answer;
 import com.example.toeicwebsite.data.entity.Question;
 import com.example.toeicwebsite.data.entity.Skill;
+import com.example.toeicwebsite.data.entity.Topic;
 import com.example.toeicwebsite.data.repository.AnswerRepository;
 import com.example.toeicwebsite.data.repository.QuestionRepository;
+import com.example.toeicwebsite.data.repository.TopicRepository;
+import com.example.toeicwebsite.exception.ConflictException;
+import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -26,6 +30,8 @@ public class QuestionServiceImpl implements QuestionService {
     @Autowired
     private AnswerRepository answerRepository;
 
+    @Autowired
+    private TopicRepository topicRepository;
     @Override
     public List<QuestionDTO> getAllQuestionsWithAnswersByTopicId(Long topicId) {
         List<Question> questions = questionRepository.findAllByTopicId(topicId);
@@ -85,5 +91,36 @@ public class QuestionServiceImpl implements QuestionService {
         return new PaginationDTO(list, page.isFirst(), page.isLast(),
                 page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
 
+    }
+
+    @Override
+    public MessageResponse createQuestion(QuestionDTO questionDTO) {
+        Topic topic = topicRepository.findById(questionDTO.getTopicId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "topic khong ton tai"))
+        );
+
+        Optional<Question> questionFind = questionRepository.findByName(questionDTO.getName());
+        if (questionFind.isPresent()){
+            throw new ConflictException(Collections.singletonMap("cau hoi nay da ton tai: ", questionDTO.getName()));
+        }
+        else {
+            Question question = new Question();
+            question.setName(questionDTO.getName());
+            question.setTopic(topic);
+
+            questionRepository.save(question);
+
+            List<AnswerDTO> answerDTOs = questionDTO.getAnswers();
+            for (AnswerDTO answerDTO: answerDTOs) {
+                Answer answer = new Answer();
+
+                answer.setContent(answerDTO.getContent());
+                answer.setCorrectAnswer(answerDTO.isCorrectAnswer());
+                answer.setQuestion(question);
+
+                answerRepository.save(answer);
+            }
+            return new MessageResponse(HttpServletResponse.SC_OK, "tao question thanh cong");
+        }
     }
 }

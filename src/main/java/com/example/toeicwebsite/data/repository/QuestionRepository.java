@@ -10,6 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 
 public interface QuestionRepository extends JpaRepository<Question, Long>{
@@ -17,6 +18,7 @@ public interface QuestionRepository extends JpaRepository<Question, Long>{
     //this query have problem cause the can't create bean problem
     List<Question> findAllByTopicId(Long topicId);
 
+    Optional<Question> findByName(String name);
     @Query("select ncc from Question ncc " +
 
             "where " +
