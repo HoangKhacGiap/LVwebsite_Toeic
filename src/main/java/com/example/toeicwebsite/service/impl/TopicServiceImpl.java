@@ -34,6 +34,8 @@ public class TopicServiceImpl implements TopicService {
     private LevelRepository levelRepository;
     @Autowired
     private PartRepository partRepository;
+    @Autowired
+    private SkillRepository skillRepository;
 
     @Autowired
     private QuestionRepository questionRepository;
@@ -148,5 +150,35 @@ public class TopicServiceImpl implements TopicService {
         topicRepository.delete(topic);
 
         return new MessageResponse(HttpServletResponse.SC_OK, "xoa topic thanh cong");
+    }
+
+    @Override
+    public MessageResponse updateTopic(TopicDTO topicDTO) {
+        Topic topic = topicRepository.findById(topicDTO.getId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("topic id nay khong ton tai", topicDTO.getId()))
+        );
+
+        Part part = partRepository.findById(topicDTO.getPartId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("part id nay khong ton dai", topicDTO.getPartId()))
+        );
+        Level level = levelRepository.findById(topicDTO.getLevelId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("level nay khong ton tai", topicDTO.getLevelId()))
+        );
+
+        topic.setName(topicDTO.getName());
+        topic.setContent(topicDTO.getName());
+
+        topic.setAudio_name(topicDTO.getAudioName());
+        topic.setAudio_path(topicDTO.getAudioName());
+
+        topic.setImage_name(topicDTO.getImageName());
+        topic.setImage_path(topicDTO.getImageName());
+
+        topic.setPart(part);
+        topic.setLevel(level);
+
+        topicRepository.save(topic);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "update topic thanh cong");
     }
 }
