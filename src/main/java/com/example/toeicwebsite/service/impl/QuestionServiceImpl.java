@@ -1,10 +1,7 @@
 package com.example.toeicwebsite.service.impl;
 
 import com.example.toeicwebsite.data.dto.*;
-import com.example.toeicwebsite.data.entity.Answer;
-import com.example.toeicwebsite.data.entity.Question;
-import com.example.toeicwebsite.data.entity.Skill;
-import com.example.toeicwebsite.data.entity.Topic;
+import com.example.toeicwebsite.data.entity.*;
 import com.example.toeicwebsite.data.repository.AnswerRepository;
 import com.example.toeicwebsite.data.repository.QuestionRepository;
 import com.example.toeicwebsite.data.repository.TopicRepository;
@@ -122,5 +119,21 @@ public class QuestionServiceImpl implements QuestionService {
             }
             return new MessageResponse(HttpServletResponse.SC_OK, "tao question thanh cong");
         }
+    }
+
+    @Override
+    public MessageResponse deleteQuestion(Long questionId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("question id nay khong ton tai", questionId))
+        );
+        List<Answer> answers = answerRepository.findAllByQuestionId(questionId);
+//        if (!answers.isEmpty()) {
+//            throw new ConflictException(Collections.singletonMap("đã tồn tại câu trả lời", questionId));
+//        }
+
+        answerRepository.deleteAll(answers);
+        questionRepository.delete(question);
+
+        return new MessageResponse(HttpServletResponse.SC_OK, "xoa question and answer thanh cong");
     }
 }

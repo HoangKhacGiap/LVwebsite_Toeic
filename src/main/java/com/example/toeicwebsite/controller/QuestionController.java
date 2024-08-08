@@ -43,4 +43,11 @@ public class QuestionController {
     public ResponseEntity<?> createQuestion(@Valid @RequestBody QuestionDTO questionDTO) {
         return ResponseEntity.ok(questionService.createQuestion(questionDTO));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @DeleteMapping ("/deleteQuestion")
+    public ResponseEntity<?> deletePart(@RequestParam Long questionId) {
+        return ResponseEntity.ok(questionService.deleteQuestion(questionId));
+    }
 }

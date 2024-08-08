@@ -14,4 +14,6 @@ public interface QuestionService {
     PaginationDTO filterQuestion(String keyword, int pageNumber, int pageSize);
 
     MessageResponse createQuestion(QuestionDTO questionDTO);
+
+    MessageResponse deleteQuestion(Long questionId);
 }
