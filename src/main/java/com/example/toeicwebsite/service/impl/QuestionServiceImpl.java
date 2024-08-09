@@ -4,6 +4,7 @@ import com.example.toeicwebsite.data.dto.*;
 import com.example.toeicwebsite.data.entity.*;
 import com.example.toeicwebsite.data.repository.AnswerRepository;
 import com.example.toeicwebsite.data.repository.QuestionRepository;
+import com.example.toeicwebsite.data.repository.TestDetailRepository;
 import com.example.toeicwebsite.data.repository.TopicRepository;
 import com.example.toeicwebsite.exception.ConflictException;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
@@ -29,6 +30,8 @@ public class QuestionServiceImpl implements QuestionService {
 
     @Autowired
     private TopicRepository topicRepository;
+    @Autowired
+    private TestDetailRepository testDetailRepository;
     @Override
     public List<QuestionDTO> getAllQuestionsWithAnswersByTopicId(Long topicId) {
         List<Question> questions = questionRepository.findAllByTopicId(topicId);
@@ -126,10 +129,12 @@ public class QuestionServiceImpl implements QuestionService {
         Question question = questionRepository.findById(questionId).orElseThrow(
                 () -> new ResourceNotFoundException(Collections.singletonMap("question id nay khong ton tai", questionId))
         );
+        List<TestDetail> testDetails = testDetailRepository.findAllByQuestionId(questionId);
+        if(!testDetails.isEmpty()){
+            throw new ConflictException(Collections.singletonMap("da ton tai test detail", questionId));
+        }
+
         List<Answer> answers = answerRepository.findAllByQuestionId(questionId);
-//        if (!answers.isEmpty()) {
-//            throw new ConflictException(Collections.singletonMap("đã tồn tại câu trả lời", questionId));
-//        }
 
         answerRepository.deleteAll(answers);
         questionRepository.delete(question);
