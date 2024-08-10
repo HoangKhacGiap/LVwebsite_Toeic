@@ -27,7 +27,7 @@ public class TopicController {
     @PreAuthorize("hasAuthority('Role_Admin')")
     @GetMapping("/filterTopic")
     public ResponseEntity<?> filterTopic(@RequestParam(defaultValue = "0") int pageNumber,
-                                         @RequestParam(defaultValue = "20") int pageSize,
+                                         @RequestParam(defaultValue = "") int pageSize,
                                          @RequestParam(defaultValue = "") String keyword) {
 
         return ResponseEntity.ok(topicService.filterTopic(keyword, pageNumber, pageSize));

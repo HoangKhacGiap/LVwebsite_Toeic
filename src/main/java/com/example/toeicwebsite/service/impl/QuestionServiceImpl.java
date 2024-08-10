@@ -37,7 +37,13 @@ public class QuestionServiceImpl implements QuestionService {
         List<Question> questions = questionRepository.findAllByTopicId(topicId);
         return questions.stream().map(this::questionConvertToDTO).collect(Collectors.toList());
     }
-
+    @Override
+    public QuestionDTO getQuestionById(Long questionId) {
+        Question question = questionRepository.findById(questionId).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("question id nay khong ton tai", questionId))
+        );
+        return questionConvertToDTO(question);
+    }
 
     public List<AnswerDTO> getAllAnswerByQuestionId(Long questionId) {
         List<Answer> answers = answerRepository.findAllByQuestionId(questionId);

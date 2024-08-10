@@ -21,6 +21,11 @@ public class QuestionController {
     public ResponseEntity<?> getAllQuestionsWithAnswersByTopicId(@PathVariable Long topicId) {
         return ResponseEntity.ok(questionService.getAllQuestionsWithAnswersByTopicId(topicId));
     }
+
+    @GetMapping("/oneQuestion/{questionId}")
+    public ResponseEntity<?> getQuestionWithId(@PathVariable Long questionId) {
+        return ResponseEntity.ok(questionService.getQuestionById(questionId));
+    }
     //Test service for get all questions id by topic id
     @GetMapping("/listid/{topicId}")
     public ResponseEntity<?> getAllQuestionsIdByTopicId(@PathVariable Long topicId) {

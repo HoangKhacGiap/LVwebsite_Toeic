@@ -9,6 +9,8 @@ import java.util.List;
 public interface QuestionService {
     List<QuestionDTO> getAllQuestionsWithAnswersByTopicId(Long topicId);
 
+    QuestionDTO getQuestionById(Long questionId);
+
     List<Long> getAllQuestionsIDByTopicId(Long topicId);
 
     PaginationDTO filterQuestion(String keyword, int pageNumber, int pageSize);
