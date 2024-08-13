@@ -95,6 +95,11 @@ public class StructureServiceImpl implements StructureService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public long countStructureCreate() {
+        return structureRepository.countStructureCreate();
+    }
+
     private StructureDTO structureConvertToDTO(Structure structure) {
         StructureDTO structureDTO = new StructureDTO();
 

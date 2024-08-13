@@ -16,6 +16,7 @@ public interface UserService {
 
     PaginationDTO filterSkill(String keyword, int pageNumber, int pageSize);
 
+    long countUsersExcludingAdmin();
 
 //    void createPasswordResetTokenForUser(String token);
 //

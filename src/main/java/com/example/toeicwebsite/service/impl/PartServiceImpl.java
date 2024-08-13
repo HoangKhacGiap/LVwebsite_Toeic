@@ -75,9 +75,11 @@ public class PartServiceImpl implements PartService {
                 () -> new ResourceNotFoundException(Collections.singletonMap("part id", partDTO.getId()))
         );
         Skill skill = skillRepository.findById(partDTO.getSkillId()).orElseThrow(
-                () -> new ResourceNotFoundException(Collections.singletonMap("message", "kỹ năng không toofn tại"))
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "kỹ năng không ton tại"))
         );
-
+        if (partRepository.findByName(partDTO.getName()).isPresent()) {
+            throw new ConflictException(Collections.singletonMap("part name", partDTO.getName()));
+        }
         part.setName(partDTO.getName());
         part.setDescription(partDTO.getDescription());
         part.setPart_number(partDTO.getPart_number());

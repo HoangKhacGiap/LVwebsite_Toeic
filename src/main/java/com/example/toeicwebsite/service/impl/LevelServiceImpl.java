@@ -63,11 +63,13 @@ public class LevelServiceImpl implements LevelService {
         Level level = levelRepository.findById(levelDTO.getId()).orElseThrow(
                 () -> new ResourceNotFoundException(Collections.singletonMap("level id", levelDTO.getId()))
         );
-
+        if (levelRepository.findByName(levelDTO.getName()).isPresent()) {
+            throw new ConflictException(Collections.singletonMap("level name", levelDTO.getName()));
+        }
         level.setName(levelDTO.getName());
         levelRepository.save(level);
 
-        return new MessageResponse(HttpServletResponse.SC_OK, "update skill thanh cong");
+        return new MessageResponse(HttpServletResponse.SC_OK, "update level thanh cong");
     }
 
     @Override

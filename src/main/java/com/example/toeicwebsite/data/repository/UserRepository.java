@@ -13,7 +13,9 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User,Long> {
     Optional<User> findByEmail(String email);
     Boolean existsByEmail(String email);
-    
+
+    @Query("select count(u) from User u where u.role.id != 1")
+    long countUsersExcludingAdmin();
     User findByResetToken(String token);
 
     @Query("select ncc from User ncc " +

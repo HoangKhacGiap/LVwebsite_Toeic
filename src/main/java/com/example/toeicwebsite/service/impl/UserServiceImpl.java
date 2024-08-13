@@ -168,6 +168,11 @@ public class UserServiceImpl implements UserService {
 
     }
 
+    @Override
+    public long countUsersExcludingAdmin() {
+        return userRepository.countUsersExcludingAdmin();
+    }
+
 
     private Boolean checkValidPassword(String password, String passwordEncoded) {
 

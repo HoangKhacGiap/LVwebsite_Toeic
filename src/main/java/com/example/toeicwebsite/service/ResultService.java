@@ -11,4 +11,6 @@ public interface ResultService {
     PaginationDTO filterResult(String keyword, int pageNumber, int pageSize);
 
 //    PaginationDTO filterResult(String keyword, Long userId, int pageNumber, int pageSize);
+
+    long countResult();
 }

@@ -63,4 +63,10 @@ public class UserController {
 
         return ResponseEntity.ok(userService.filterSkill(keyword, pageNumber, pageSize));
     }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countUsers")
+    public ResponseEntity<Long> countUsers() {
+        return ResponseEntity.ok(userService.countUsersExcludingAdmin());
+    }
 }

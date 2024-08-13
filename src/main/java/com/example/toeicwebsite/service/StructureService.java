@@ -11,4 +11,5 @@ public interface StructureService {
 
     List<Long> getListStructureIDByKindStructure(Long kindStructureId);
 
+    long countStructureCreate();
 }

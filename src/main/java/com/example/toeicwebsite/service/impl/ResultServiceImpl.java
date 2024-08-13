@@ -73,6 +73,11 @@ public class ResultServiceImpl implements ResultService {
 
     }
 
+    @Override
+    public long countResult() {
+        return resultRepository.countResult();
+    }
+
     public User getNguoiDungByToken() {
         String email = SecurityContextHolder.getContext().getAuthentication().getName();
         User userEmail = userRepository.findByEmail(email).orElseThrow(

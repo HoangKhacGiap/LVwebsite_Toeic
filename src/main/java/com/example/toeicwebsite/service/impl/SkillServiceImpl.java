@@ -63,7 +63,9 @@ public class SkillServiceImpl implements SkillService {
         Skill skill = skillRepository.findById(skillDTO.getId()).orElseThrow(
                 () -> new ResourceNotFoundException(Collections.singletonMap("skill id", skillDTO.getId()))
         );
-
+        if (skillRepository.findByName(skillDTO.getName()).isPresent()) {
+            throw new ConflictException(Collections.singletonMap("skill name", skillDTO.getName()));
+        }
         skill.setName(skillDTO.getName());
         skillRepository.save(skill);
 

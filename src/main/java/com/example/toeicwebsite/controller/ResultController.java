@@ -35,4 +35,10 @@ public class ResultController {
         return ResponseEntity.ok(resultService.filterResult(keyword, pageNumber, pageSize));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countResult")
+    public ResponseEntity<?> countResult() {
+        return ResponseEntity.ok(resultService.countResult());
+    }
 }

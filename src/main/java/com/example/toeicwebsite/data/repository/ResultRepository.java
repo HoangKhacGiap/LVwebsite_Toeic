@@ -19,4 +19,7 @@ public interface ResultRepository extends JpaRepository<Result, Long> {
     Page<Result> filterResult(@Param("keyword") String keyword,
                               @Param("userId") Long userId,
                               Pageable pageable);
+
+    @Query("select count(u) from Result u")
+    long countResult();
 }
