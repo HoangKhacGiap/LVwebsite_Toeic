@@ -2,6 +2,8 @@ package com.example.toeicwebsite.data.dto;
 
 import lombok.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -22,4 +24,6 @@ public class TopicDTO {
     private Long levelId;
 
     private boolean isDeleted;
+
+    List<QuestionDTO> questions;
 }

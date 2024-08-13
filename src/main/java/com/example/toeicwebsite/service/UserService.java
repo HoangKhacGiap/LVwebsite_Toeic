@@ -12,6 +12,12 @@ public interface UserService {
 
     MessageResponse updateNguoiDung(UserDTO userDTO);
 
+    UserDTO getNguoiDungHienTai();
+
+    PaginationDTO filterSkill(String keyword, int pageNumber, int pageSize);
+
+    long countUsersExcludingAdmin();
+
 //    void createPasswordResetTokenForUser(String token);
 //
 //    void sendPasswordResetEmail(User user, String token);

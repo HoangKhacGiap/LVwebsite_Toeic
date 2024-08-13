@@ -6,6 +6,7 @@ import com.example.toeicwebsite.service.UserService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -25,6 +26,11 @@ public class UserController {
         return ResponseEntity.ok(userService.updateNguoiDung(userDTO));
     }
 
+    @SecurityRequirement(name = "Bearer Authentication")
+    @GetMapping("/profile")
+    public ResponseEntity<?> getNguoiDungHienTai() {
+        return ResponseEntity.ok(userService.getNguoiDungHienTai());
+    }
 //    @PostMapping("/request")
 //    public ResponseEntity<String> requestResetPassword(@RequestParam("email") String email) {
 //        User user = userService.getUserByEmail(email);
@@ -48,4 +54,19 @@ public class UserController {
 //            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
 //        }
 //    }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/filterUser")
+    public ResponseEntity<?> filterUser(@RequestParam(defaultValue = "0") int pageNumber,
+                                         @RequestParam(defaultValue = "10") int pageSize,
+                                         @RequestParam(defaultValue = "") String keyword) {
+
+        return ResponseEntity.ok(userService.filterSkill(keyword, pageNumber, pageSize));
+    }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countUsers")
+    public ResponseEntity<Long> countUsers() {
+        return ResponseEntity.ok(userService.countUsersExcludingAdmin());
+    }
 }

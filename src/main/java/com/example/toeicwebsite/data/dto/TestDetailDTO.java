@@ -7,9 +7,8 @@ import lombok.*;
 @Data
 @Getter
 @Setter
-public class AnwserDTO {
+public class TestDetailDTO {
     private Long id;
-    private String content;
-    private boolean correctAnswer;
+    private Long testId;
     private Long questionId;
 }

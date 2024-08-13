@@ -2,6 +2,7 @@ package com.example.toeicwebsite.service.impl;
 
 import com.example.toeicwebsite.data.dto.*;
 import com.example.toeicwebsite.data.entity.Role;
+import com.example.toeicwebsite.data.entity.Skill;
 import com.example.toeicwebsite.data.entity.User;
 import com.example.toeicwebsite.data.mapper.UserMapper;
 import com.example.toeicwebsite.data.repository.RoleRepository;
@@ -14,6 +15,8 @@ import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.JwtService;
 import com.example.toeicwebsite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -26,7 +29,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -44,8 +49,7 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-//    @Autowired
-//    private JavaMailSender mailSender;
+
     @Autowired
     private UserMapper userMapper;
     @Override
@@ -67,7 +71,7 @@ public class UserServiceImpl implements UserService {
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(),
                         loginDTO.getPassword()));
 
-//        SecurityContextHolder.getContext().setAuthentication(authentication);
+
 
         Role role = user.getRole();
 
@@ -108,7 +112,7 @@ public class UserServiceImpl implements UserService {
     public MessageResponse updateNguoiDung(UserDTO userDTO) {
         User userCurrent = getNguoiDungByToken();
 
-//        User userUpdate = userMapper.toEntity(userDTO);
+
         User userUpdate = new User();
 
         userUpdate.setId(userCurrent.getId());
@@ -123,6 +127,50 @@ public class UserServiceImpl implements UserService {
 
         userRepository.save(userUpdate);
         return new MessageResponse(HttpServletResponse.SC_OK, "update user thanh cong");
+    }
+
+    @Override
+    public UserDTO getNguoiDungHienTai() {
+        User userCurrent = getNguoiDungByToken();
+//        UserDTO userDTO = userMapper.toDTO(userCurrent);
+        UserDTO userDTO = new UserDTO();
+
+        userDTO.setId(userCurrent.getId());
+        userDTO.setName(userCurrent.getName());
+        userDTO.setEmail(userCurrent.getEmail());
+        userDTO.setAddress(userCurrent.getAddress());
+        userDTO.setPhoneNumber(userCurrent.getPhoneNumber());
+
+        return userDTO;
+    }
+
+    @Override
+    public PaginationDTO filterSkill(String keyword, int pageNumber, int pageSize) {
+        Page<User> page = userRepository.filterUser(keyword, PageRequest.of(pageNumber, pageSize));
+        List<UserDTO> list = new ArrayList<>();
+
+        for (User user: page.getContent()) {
+
+//            SkillDTO skillDTO = skillMapper.toDTO(skill);
+            UserDTO userDTO = new UserDTO();
+
+            userDTO.setId(user.getId());
+            userDTO.setName(user.getName());
+            userDTO.setEmail(user.getEmail());
+            userDTO.setAddress(user.getAddress());
+            userDTO.setPhoneNumber(user.getPhoneNumber());
+//            userDTO.setRole(user.getRole().getName());
+
+            list.add(userDTO);
+        }
+        return new PaginationDTO(list, page.isFirst(), page.isLast(),
+                page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
+
+    }
+
+    @Override
+    public long countUsersExcludingAdmin() {
+        return userRepository.countUsersExcludingAdmin();
     }
 
 
@@ -140,52 +188,5 @@ public class UserServiceImpl implements UserService {
                 () -> new ResourceNotFoundException(Collections.singletonMap("message", "nguoi dung nay khong ton tai"))
         );
     }
-//    @Override
-//    public void createPasswordResetTokenForUser(String token) {
-////        PasswordResetToken myToken = new PasswordResetToken(token, user);
-////        tokenRepository.save(myToken);
-//        User userCurrent = getNguoiDungByToken();
-//        User userUpdate = new User();
-//
-//        userUpdate.setId(userCurrent.getId());
-//        userUpdate.setName(userCurrent.getName());
-//        userUpdate.setAddress(userCurrent.getAddress());
-//        userUpdate.setPhoneNumber(userCurrent.getPhoneNumber());
-//
-//        userUpdate.setEmail(userCurrent.getEmail());
-//        userUpdate.setPassword(userCurrent.getPassword());
-//
-//        userUpdate.setRole(userCurrent.getRole());
-//
-//        userUpdate.setResetToken(token);
-//        userRepository.save(userUpdate);
-//    }
-//
-//    @Override
-//    public void sendPasswordResetEmail(User user, String token) {
-//        String url = "http://localhost:8080/reset-password?token=" + token;
-//        SimpleMailMessage email = new SimpleMailMessage();
-//        email.setTo(user.getEmail());
-//        email.setSubject("Reset Password");
-//        email.setText("To reset your password, click the link below:\n" + url);
-//        mailSender.send(email);
-//    }
-//
-//    @Override
-//    public void resetPassword(String token, String newPassword) {
-//        User resetToken = userRepository.findByResetToken(token);
-//        if (resetToken==null) {
-//            throw new IllegalArgumentException("Invalid token");
-//        }
-////        User userAfterResetPass = resetToken.getUser();
-//        resetToken.setPassword(passwordEncoder.encode(newPassword));
-//        userRepository.save(resetToken);
-//        userRepository.delete(resetToken);
-//    }
-//
-//    @Override
-//    public User getUserByEmail(String email) {
-//        Optional<User> optionalUser = userRepository.findByEmail(email);
-//        return optionalUser.orElseThrow(() -> new RuntimeException("User not found"));
-//    }
+
 }

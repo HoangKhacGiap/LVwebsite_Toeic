@@ -27,10 +27,24 @@ public class SkillController {
     @SecurityRequirement(name = "Bearer Authentication")
     @PreAuthorize("hasAuthority('Role_Admin')")
     @GetMapping("/filterSkill")
-    public ResponseEntity<?> filterNhaCungCap(@RequestParam(defaultValue = "0") int pageNumber,
+    public ResponseEntity<?> filterSkill(@RequestParam(defaultValue = "0") int pageNumber,
                                               @RequestParam(defaultValue = "10") int pageSize,
                                               @RequestParam(defaultValue = "") String keyword) {
 
         return ResponseEntity.ok(skillService.filterSkill(keyword, pageNumber, pageSize));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @PutMapping("/updateSkill")
+    public ResponseEntity<?> updateSkill(@Valid @RequestBody SkillDTO skillDTO) {
+        return ResponseEntity.ok(skillService.updateSkill(skillDTO));
+    }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @DeleteMapping ("/deleteSkill")
+    public ResponseEntity<?> deleteSkill(@RequestParam Long skillId) {
+        return ResponseEntity.ok(skillService.deleteSkill(skillId));
     }
 }
