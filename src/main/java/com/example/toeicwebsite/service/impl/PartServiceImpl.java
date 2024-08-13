@@ -104,4 +104,9 @@ public class PartServiceImpl implements PartService {
 
         return new MessageResponse(HttpServletResponse.SC_OK, "xoa part thanh cong");
     }
+
+    @Override
+    public long countPart() {
+        return partRepository.countPart();
+    }
 }

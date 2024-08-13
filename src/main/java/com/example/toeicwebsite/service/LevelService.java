@@ -11,4 +11,6 @@ public interface LevelService {
     MessageResponse updateLevel(LevelDTO levelDTO);
 
     MessageResponse deleteLevel(Long skillId);
+
+    long countLevel();
 }

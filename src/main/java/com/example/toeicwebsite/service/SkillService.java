@@ -12,4 +12,6 @@ public interface SkillService {
     MessageResponse updateSkill(SkillDTO skillDTO);
 
     MessageResponse deleteSkill(Long skillId);
+
+    long countskill();
 }

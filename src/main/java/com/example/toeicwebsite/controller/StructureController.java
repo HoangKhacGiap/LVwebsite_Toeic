@@ -19,7 +19,7 @@ public class StructureController {
     @Autowired
     private StructureService structureService;
 
-
+    @SecurityRequirement(name = "Bearer Authentication")
     @PostMapping("/saveStructure")
     public ResponseEntity<?> saveStructure(@Valid @RequestBody List<StructureDTO> structureDTOs) {
         return ResponseEntity.ok(structureService.saveStructure(structureDTOs));

@@ -47,4 +47,10 @@ public class LevelController {
     public ResponseEntity<?> deleteLevel(@RequestParam Long levelId) {
         return ResponseEntity.ok(levelService.deleteLevel(levelId));
     }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countLevel")
+    public ResponseEntity<Long> countUsers() {
+        return ResponseEntity.ok(levelService.countLevel());
+    }
 }

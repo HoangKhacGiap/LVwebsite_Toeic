@@ -147,4 +147,9 @@ public class QuestionServiceImpl implements QuestionService {
 
         return new MessageResponse(HttpServletResponse.SC_OK, "xoa question and answer thanh cong");
     }
+
+    @Override
+    public long countQuestion() {
+        return questionRepository.countQuestion();
+    }
 }

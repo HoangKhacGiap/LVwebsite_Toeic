@@ -18,4 +18,6 @@ public interface QuestionService {
     MessageResponse createQuestion(QuestionDTO questionDTO);
 
     MessageResponse deleteQuestion(Long questionId);
+
+    long countQuestion();
 }

@@ -55,4 +55,11 @@ public class QuestionController {
     public ResponseEntity<?> deletePart(@RequestParam Long questionId) {
         return ResponseEntity.ok(questionService.deleteQuestion(questionId));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countQuestion")
+    public ResponseEntity<Long> countUsers() {
+        return ResponseEntity.ok(questionService.countQuestion());
+    }
 }

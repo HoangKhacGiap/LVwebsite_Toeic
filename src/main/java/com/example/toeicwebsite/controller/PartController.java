@@ -49,4 +49,11 @@ public class PartController {
     public ResponseEntity<?> updatePart(@Valid @RequestBody PartDTO partDTO) {
         return ResponseEntity.ok(partService.updatePart(partDTO));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countPart")
+    public ResponseEntity<Long> countUsers() {
+        return ResponseEntity.ok(partService.countPart());
+    }
 }

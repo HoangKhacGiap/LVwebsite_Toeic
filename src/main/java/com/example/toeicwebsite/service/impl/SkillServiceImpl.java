@@ -86,4 +86,9 @@ public class SkillServiceImpl implements SkillService {
 
         return new MessageResponse(HttpServletResponse.SC_OK, "xoa skill thanh cong");
     }
+
+    @Override
+    public long countskill() {
+        return skillRepository.countSkill();
+    }
 }

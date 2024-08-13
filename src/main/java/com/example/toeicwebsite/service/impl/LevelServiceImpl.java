@@ -86,4 +86,9 @@ public class LevelServiceImpl implements LevelService {
 
         return new MessageResponse(HttpServletResponse.SC_OK, "xoa Level thanh cong");
     }
+
+    @Override
+    public long countLevel() {
+        return levelRepository.countLevel();
+    }
 }

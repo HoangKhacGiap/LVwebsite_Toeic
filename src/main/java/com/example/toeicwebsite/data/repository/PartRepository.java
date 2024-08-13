@@ -14,6 +14,9 @@ import java.util.Optional;
 public interface PartRepository extends JpaRepository<Part,Long> {
     Optional<Part> findByName(String name);
 
+    @Query("select count(u) from Part u ")
+    long countPart();
+
     List<Part> findBySkill_Id(Long id);
     @Query("select ncc from Part ncc " +
 

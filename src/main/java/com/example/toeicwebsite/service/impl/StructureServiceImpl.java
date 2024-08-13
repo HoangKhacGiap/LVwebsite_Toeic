@@ -5,10 +5,7 @@ import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.StructureDTO;
 import com.example.toeicwebsite.data.dto.TopicDTO;
 import com.example.toeicwebsite.data.entity.*;
-import com.example.toeicwebsite.data.repository.KindOfStructureRepository;
-import com.example.toeicwebsite.data.repository.LevelRepository;
-import com.example.toeicwebsite.data.repository.PartRepository;
-import com.example.toeicwebsite.data.repository.StructureRepository;
+import com.example.toeicwebsite.data.repository.*;
 import com.example.toeicwebsite.exception.ConflictException;
 import com.example.toeicwebsite.exception.ExceptionCustom;
 import com.example.toeicwebsite.exception.ResourceNotFoundException;
@@ -17,6 +14,7 @@ import com.example.toeicwebsite.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
@@ -37,9 +35,16 @@ public class StructureServiceImpl implements StructureService {
 
     @Autowired
     private TopicService topicService;
-    @Override
+
+    @Autowired
+    private UserRepository userRepository;
     public Long saveStructure(List<StructureDTO> structureDTOs) {
+        User user = getNguoiDungByToken();
+
         KindOfStructure kindOfStructure = new KindOfStructure();
+        kindOfStructure.setName(user.getEmail());
+        kindOfStructure.setStatus("Thành Công");
+
         Set<Long> partIds = new HashSet<>();
         List<Structure> structures = structureDTOs.stream().map(dto -> {
 
@@ -54,7 +59,7 @@ public class StructureServiceImpl implements StructureService {
             Level level = levelRepository.findByName(dto.getLevel_of_topic()).orElseThrow(
                     () -> new ResourceNotFoundException(Collections.singletonMap("message", "level không tồn tại")));
             Structure structure = new Structure();
-            structure.setName(dto.getName());
+            structure.setName(user.getEmail());
             structure.setNumber_of_topic(dto.getNumber_of_topic());
             structure.setLevel_of_topic(dto.getLevel_of_topic());
             structure.setPart(part);
@@ -135,5 +140,13 @@ public class StructureServiceImpl implements StructureService {
 
         return structureDTO;
     }
+    public User getNguoiDungByToken() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        User userEmail = userRepository.findByEmail(email).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "Tai khoan nay khong ton tai")));
 
+        return userRepository.findById(userEmail.getId()).orElseThrow(
+                () -> new ResourceNotFoundException(Collections.singletonMap("message", "nguoi dung nay khong ton tai"))
+        );
+    }
 }

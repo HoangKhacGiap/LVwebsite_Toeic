@@ -12,6 +12,9 @@ import java.util.Optional;
 public interface SkillRepository extends JpaRepository<Skill, Long> {
     Optional<Skill> findByName(String name);
 
+    @Query("select count(u) from Skill u ")
+    long countSkill();
+
     @Query("select ncc from Skill ncc " +
 
             "where " +

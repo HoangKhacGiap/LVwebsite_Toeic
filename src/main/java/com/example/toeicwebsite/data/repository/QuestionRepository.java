@@ -17,6 +17,9 @@ public interface QuestionRepository extends JpaRepository<Question, Long>{
 
     //this query have problem cause the can't create bean problem
     List<Question> findAllByTopicId(Long topicId);
+
+    @Query("select count(u) from Question u ")
+    long countQuestion();
     Optional<Question> findByName(String name);
     @Query("select ncc from Question ncc " +
 

@@ -12,6 +12,8 @@ import java.util.Optional;
 
 public interface LevelRepository extends JpaRepository<Level,Long> {
     Optional<Level> findByName(String name);
+    @Query("select count(u) from Level u ")
+    long countLevel();
 
     @Query("select ncc from Level ncc " +
 

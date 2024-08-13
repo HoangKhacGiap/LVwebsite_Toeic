@@ -47,4 +47,11 @@ public class SkillController {
     public ResponseEntity<?> deleteSkill(@RequestParam Long skillId) {
         return ResponseEntity.ok(skillService.deleteSkill(skillId));
     }
+
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countSkill")
+    public ResponseEntity<Long> countUsers() {
+        return ResponseEntity.ok(skillService.countskill());
+    }
 }
