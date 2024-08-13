@@ -20,9 +20,8 @@ public interface StructureRepository extends JpaRepository<Structure, Long>{
             "where " +
             "(:keyword = '' " +
             "OR  ncc.name LIKE %:keyword% " +
-            "OR  ncc.level_of_topic LIKE %:keyword% " +
-            "OR  ncc.name LIKE %:keyword%) " +
+            "OR  ncc.level_of_topic LIKE %:keyword%) " +
 
             "ORDER BY ncc.id DESC")
-    Page<Skill> filterSkill(@Param("keyword") String keyword, Pageable pageable);
+    Page<Structure> filterStructure(@Param("keyword") String keyword, Pageable pageable);
 }

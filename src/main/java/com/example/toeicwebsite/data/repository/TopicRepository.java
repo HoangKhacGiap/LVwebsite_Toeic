@@ -17,7 +17,8 @@ public interface TopicRepository extends JpaRepository<Topic, Long>{
 
     List<Topic> findByPart_Id(Long partId);
 
-
+    @Query("select count(u) from Topic u ")
+    long countTopic();
     @Query("SELECT t FROM Topic t WHERE (t.part.id = :partId AND t.level.name = :levelOfTopic)" +
             "ORDER BY RAND()"
     )

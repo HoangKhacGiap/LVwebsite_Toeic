@@ -1,6 +1,7 @@
 package com.example.toeicwebsite.service.impl;
 
 import com.example.toeicwebsite.data.dto.MessageResponse;
+import com.example.toeicwebsite.data.dto.PaginationDTO;
 import com.example.toeicwebsite.data.dto.StructureDTO;
 import com.example.toeicwebsite.data.dto.TopicDTO;
 import com.example.toeicwebsite.data.entity.*;
@@ -14,13 +15,12 @@ import com.example.toeicwebsite.exception.ResourceNotFoundException;
 import com.example.toeicwebsite.service.StructureService;
 import com.example.toeicwebsite.service.TopicService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletResponse;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 @Service
@@ -98,6 +98,29 @@ public class StructureServiceImpl implements StructureService {
     @Override
     public long countStructureCreate() {
         return structureRepository.countStructureCreate();
+    }
+
+    @Override
+    public PaginationDTO filterStructure(String keyword, int pageNumber, int pageSize) {
+        Page<Structure> page = structureRepository.filterStructure(keyword, PageRequest.of(pageNumber, pageSize));
+        List<StructureDTO> list = new ArrayList<>();
+
+        for (Structure structure: page.getContent()) {
+            StructureDTO structureDTO = new StructureDTO();
+
+            structureDTO.setId(structure.getId());
+            structureDTO.setName(structure.getName());
+            structureDTO.setNumber_of_topic(structure.getNumber_of_topic());
+            structureDTO.setLevel_of_topic(structure.getLevel_of_topic());
+
+            structureDTO.setPart_id(structure.getPart().getId());
+
+            structureDTO.setTopics(topicService.getTopicsByStructure(structure.getId()));
+
+            list.add(structureDTO);
+        }
+        return new PaginationDTO(list, page.isFirst(), page.isLast(),
+                page.getTotalPages(), page.getTotalElements(), page.getNumber(), page.getSize());
     }
 
     private StructureDTO structureConvertToDTO(Structure structure) {

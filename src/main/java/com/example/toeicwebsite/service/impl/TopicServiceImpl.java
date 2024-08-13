@@ -181,4 +181,9 @@ public class TopicServiceImpl implements TopicService {
 
         return new MessageResponse(HttpServletResponse.SC_OK, "update topic thanh cong");
     }
+
+    @Override
+    public long countTopic() {
+        return topicRepository.countTopic();
+    }
 }

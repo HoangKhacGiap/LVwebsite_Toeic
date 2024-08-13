@@ -37,4 +37,13 @@ public class StructureController {
     public ResponseEntity<Long> countStructure() {
         return ResponseEntity.ok(structureService.countStructureCreate());
     }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/filterSructure")
+    public ResponseEntity<?> filterStructure(@RequestParam(defaultValue = "0") int pageNumber,
+                                         @RequestParam(defaultValue = "10") int pageSize,
+                                         @RequestParam(defaultValue = "") String keyword) {
+
+        return ResponseEntity.ok(structureService.filterStructure(keyword, pageNumber, pageSize));
+    }
 }

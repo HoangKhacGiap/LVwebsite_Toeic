@@ -18,8 +18,8 @@ public class EmailSendController {
     @Autowired
     private EmailService emailService;
 
-    @SecurityRequirement(name = "Bearer Authentication")
-    @PreAuthorize("hasAuthority('Role_Student')")
+//    @SecurityRequirement(name = "Bearer Authentication")
+//    @PreAuthorize("hasAuthority('Role_Student')")
     @PostMapping("/send")
     public String sendMail(@RequestParam String to, String subject, String text) throws MessagingException {
 //        String to = (String) emailSender.get("to");

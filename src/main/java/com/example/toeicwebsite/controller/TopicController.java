@@ -53,4 +53,10 @@ public class TopicController {
     public ResponseEntity<?> deleteTopic(@Valid @RequestBody TopicDTO topicDTO) {
         return ResponseEntity.ok(topicService.updateTopic(topicDTO));
     }
+    @SecurityRequirement(name = "Bearer Authentication")
+    @PreAuthorize("hasAuthority('Role_Admin')")
+    @GetMapping("/countTopic")
+    public ResponseEntity<Long> countUsers() {
+        return ResponseEntity.ok(topicService.countTopic());
+    }
 }
